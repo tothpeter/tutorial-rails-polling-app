@@ -1,9 +1,15 @@
 %p#notice= notice
 
-%p
-  %b Title:
-  = @poll.title
+%h2= @poll.title
 
-= link_to 'Edit', edit_poll_path(@poll)
-\|
-= link_to 'Back', polls_path
+%p.btn-group.btn-group-xs
+  = link_to 'Edit', edit_poll_path(@poll), class: "btn btn-default"
+  = link_to 'Back', polls_path, class: "btn btn-default"
+  = link_to 'Add Question', new_poll_question_path(@poll), class: "btn btn-default"
+
+%h2 Questions
+
+%ul
+  - @poll.questions.each do |question|
+    %li= question.title
+    
