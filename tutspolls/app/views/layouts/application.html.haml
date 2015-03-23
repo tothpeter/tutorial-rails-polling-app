@@ -8,4 +8,9 @@
   %body
     = render "nav"
     .container
+      - if alert
+        .alert.alert-danger= alert
+      - if notice
+        .alert.alert-success= notice 
+
       = yield
