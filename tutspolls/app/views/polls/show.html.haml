@@ -1,20 +1,44 @@
 %p#notice= notice
 
-%h2= @poll.title
+%h1= @poll.title
 
-%p.btn-group.btn-group-xs
-  = link_to 'Edit', edit_poll_path(@poll), class: "btn btn-default"
-  = link_to 'Back', polls_path, class: "btn btn-default"
-  = link_to 'Add Question', new_poll_question_path(@poll), class: "btn btn-default"
+%div{:role => "tabpanel"}
+  / Nav tabs
+  %ul.nav.nav-tabs{:role => "tablist"}
+    %li.active{:role => "presentation"}
+      %a{"aria-controls" => "tab-questions", "data-toggle" => "tab", :href => "#tab-questions", :role => "tab"} Questions
+    %li{:role => "presentation"}
+      %a{"aria-controls" => "tab-replies", "data-toggle" => "tab", :href => "#tab-replies", :role => "tab"} Replies
+    %li{:role => "presentation"}
+      %a{"aria-controls" => "tab-stats", "data-toggle" => "tab", :href => "#tab-stats", :role => "tab"} Stats
 
-%h2 Questions
-
-%ul
-  - @poll.questions.each do |question|
-    %li
-      = question.title
+  / Tab panes
+  .tab-content
+    #tab-questions.tab-pane.active{:role => "tabpanel"}
+      %h2 Questions
       %ul
-        - question.possible_answers.each do |answer|
-          %li= answer.title
-          
-    
+        - @poll.questions.each do |question|
+          %li
+            = question.title
+            %ul
+              - question.possible_answers.each do |answer|
+                %li= answer.title
+      %p.btn-group.btn-group-xs
+        = link_to 'Edit', edit_poll_path(@poll), class: "btn btn-default"
+        = link_to 'Back', polls_path, class: "btn btn-default"
+        = link_to 'Add Question', new_poll_question_path(@poll), class: "btn btn-default"
+
+    #tab-replies.tab-pane{:role => "tabpanel"}
+      %h2 Replies
+
+      - @poll.replies.each do |reply|
+        .col-md-6
+          .panel.panel-default
+            .panel-heading.text-right
+              = time_ago_in_words reply.created_at
+            .panel-body
+              %dl
+                - reply.answers.each do |answer|
+                  %dt= answer.question.title
+                  %dd= answer.value.present? ? answer.value : answer.possible_answer.title
+    #tab-stats.tab-pane{:role => "tabpanel"}
